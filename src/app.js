@@ -16,4 +16,11 @@ app.use(cors({ origin: '*' }));
 
 app.use('/api/v1', apiRouter);
 
+app.use((error, req, res, next) => {
+  const status = res.statusCode === 200 ? 500 : res.statusCode;
+  res.status(status).json({
+    message: error.message,
+  });
+});
+
 module.exports = app;

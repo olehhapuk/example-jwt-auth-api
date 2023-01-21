@@ -9,7 +9,8 @@ exports.register = async (req, res, next) => {
 
     const existingUser = db.findByEmail(email);
     if (existingUser) {
-      res.status(400).send('Email is already in use');
+      res.status(400);
+      next(new Error('Email is already in use'));
       return;
     }
 
@@ -36,13 +37,15 @@ exports.login = async (req, res, next) => {
 
     const user = db.findByEmail(email);
     if (!user) {
-      res.status(400).send('Wrong credentials');
+      res.status(400);
+      next(new Error('Wrong credentials'));
       return;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      res.status(400).send('Wrong credentials');
+      res.status(400);
+      next(new Error('Wrong credentials'));
       return;
     }
 
